@@ -14,8 +14,10 @@ import com.google.common.collect.Lists;
 
 public class SentimentClassifier extends BaseOperator
 {
-  private ArrayList<String> positiveWords = Lists.newArrayList();
-  private ArrayList<String> negativeWords = Lists.newArrayList();
+  private transient ArrayList<String> positiveWords = Lists.newArrayList();
+  private transient ArrayList<String> negativeWords = Lists.newArrayList();
+  private String positiveDictionaryPath;
+  private String negativeDictionaryPath;
 
   @Override
   public void setup(OperatorContext context)
@@ -24,7 +26,7 @@ public class SentimentClassifier extends BaseOperator
       String s = "";
 
       // Cache Positive Words
-      BufferedReader br = new BufferedReader(new FileReader("src/main/resources/dictionaries/positive-words.txt"));
+      BufferedReader br = new BufferedReader(new FileReader(positiveDictionaryPath));
       while((s = br.readLine()) != null) {
         if (! positiveWords.contains(s.toLowerCase()))
         positiveWords.add(s.toLowerCase());
@@ -32,7 +34,7 @@ public class SentimentClassifier extends BaseOperator
       br.close();
 
       // Cache Negative Words
-      br = new BufferedReader(new FileReader("src/main/resources/dictionaries/negative-words.txt"));
+      br = new BufferedReader(new FileReader(negativeDictionaryPath));
       while((s = br.readLine()) != null) {
         if (! negativeWords.contains(s.toLowerCase()))
         negativeWords.add(s.toLowerCase());
@@ -77,5 +79,25 @@ public class SentimentClassifier extends BaseOperator
     } else if(positiveCount < negativeCount) {
       negative.emit(tuple);
     }
+  }
+
+  public String getPositiveDictionaryPath()
+  {
+    return positiveDictionaryPath;
+  }
+
+  public void setPositiveDictionaryPath(String positiveDictionaryPath)
+  {
+    this.positiveDictionaryPath = positiveDictionaryPath;
+  }
+
+  public String getNegativeDictionaryPath()
+  {
+    return negativeDictionaryPath;
+  }
+
+  public void setNegativeDictionaryPath(String negativeDictionaryPath)
+  {
+    this.negativeDictionaryPath = negativeDictionaryPath;
   }
 }

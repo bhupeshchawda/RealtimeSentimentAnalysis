@@ -21,7 +21,8 @@ public class TweetReader extends BaseOperator implements InputOperator
 {
   private int numTuples = 10;
   private transient int count = 0;
-  private BufferedReader br;
+  private transient BufferedReader br;
+  private String twitterDataPath;
 
   public final transient DefaultOutputPort<String> out = new DefaultOutputPort<String>();
 
@@ -29,7 +30,7 @@ public class TweetReader extends BaseOperator implements InputOperator
   public void setup(OperatorContext context)
   {
     try {
-      br = new BufferedReader(new FileReader("src/main/resources/data/SentimentDataPipeSeparated"));
+      br = new BufferedReader(new FileReader(twitterDataPath));
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -65,5 +66,15 @@ public class TweetReader extends BaseOperator implements InputOperator
   public void setNumTuples(int numTuples)
   {
     this.numTuples = numTuples;
+  }
+
+  public String getTwitterDataPath()
+  {
+    return twitterDataPath;
+  }
+
+  public void setTwitterDataPath(String twitterDataPath)
+  {
+    this.twitterDataPath = twitterDataPath;
   }
 }
